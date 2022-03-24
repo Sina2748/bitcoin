@@ -13,6 +13,11 @@ class _PriceScreenState extends State<PriceScreen> {
   int? startingRate;
   late Future<Album> futureAlbum;
 
+  getRateFromValue(value) {
+    print(value);
+    futureAlbum = fetchAlbum(value);
+  }
+
   getmenuItems() {
     List<DropdownMenuItem<String>> menuItems = [];
     for (String currency in currenciesList) {
@@ -28,7 +33,8 @@ class _PriceScreenState extends State<PriceScreen> {
   @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();
+    String value = 'USD';
+    futureAlbum = fetchAlbum(value);
   }
 
   @override
@@ -75,6 +81,73 @@ class _PriceScreenState extends State<PriceScreen> {
                   )),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.lightBlueAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                  child: FutureBuilder<Album>(
+                    future: futureAlbum,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          '1 BTC = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
+
+                      // By default, show a loading spinner.
+                      return const CircularProgressIndicator();
+                    },
+                  )),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.lightBlueAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                  child: FutureBuilder<Album>(
+                    future: futureAlbum,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          '1 BTC = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
+
+                      // By default, show a loading spinner.
+                      return const CircularProgressIndicator();
+                    },
+                  )),
+            ),
+          ),
+          SizedBox(height: 200),
           Container(
             height: 150.0,
             alignment: Alignment.center,
@@ -82,11 +155,13 @@ class _PriceScreenState extends State<PriceScreen> {
             color: Colors.lightBlue,
             child: DropdownButton<String>(
                 icon: Icon(Icons.menu),
+                style: TextStyle(fontSize: 18),
                 value: selectedCurrency,
                 items: getmenuItems(),
                 onChanged: (value) {
                   setState(() {
                     selectedCurrency = value!;
+                    getRateFromValue(value);
                   });
                 }),
           ),
