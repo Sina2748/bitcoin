@@ -11,11 +11,15 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
   int? startingRate;
-  late Future<Album> futureAlbum;
+  // String coin = 'BTC';
+  late Future<Album> futureAlbumBTC;
+  late Future<Album> futureAlbumETH;
+  late Future<Album> futureAlbumLTC;
 
-  getRateFromValue(value) {
-    print(value);
-    futureAlbum = fetchAlbum(value);
+  getRateFromValue(coin, value) {
+    futureAlbumBTC = fetchAlbumBTC('BTC', value);
+    futureAlbumETH = fetchAlbumETH('ETH', value);
+    futureAlbumLTC = fetchAlbumLTC('LTC', value);
   }
 
   getmenuItems() {
@@ -34,7 +38,7 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     super.initState();
     String value = 'USD';
-    futureAlbum = fetchAlbum(value);
+    getRateFromValue('BTC', value);
   }
 
   @override
@@ -60,7 +64,7 @@ class _PriceScreenState extends State<PriceScreen> {
                   padding:
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                   child: FutureBuilder<Album>(
-                    future: futureAlbum,
+                    future: futureAlbumBTC,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Text(
@@ -93,11 +97,11 @@ class _PriceScreenState extends State<PriceScreen> {
                   padding:
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                   child: FutureBuilder<Album>(
-                    future: futureAlbum,
+                    future: futureAlbumETH,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Text(
-                          '1 BTC = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
+                          '1 ETH = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.0,
@@ -126,11 +130,11 @@ class _PriceScreenState extends State<PriceScreen> {
                   padding:
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                   child: FutureBuilder<Album>(
-                    future: futureAlbum,
+                    future: futureAlbumLTC,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Text(
-                          '1 BTC = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
+                          '1 LTC = ${(snapshot.data!.rate).toInt()} ${snapshot.data!.asset}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20.0,
@@ -147,7 +151,7 @@ class _PriceScreenState extends State<PriceScreen> {
                   )),
             ),
           ),
-          SizedBox(height: 200),
+          SizedBox(height: 150),
           Container(
             height: 150.0,
             alignment: Alignment.center,
@@ -161,7 +165,9 @@ class _PriceScreenState extends State<PriceScreen> {
                 onChanged: (value) {
                   setState(() {
                     selectedCurrency = value!;
-                    getRateFromValue(value);
+                    getRateFromValue('BTC', value);
+                    getRateFromValue('BTC', value);
+                    getRateFromValue('BTC', value);
                   });
                 }),
           ),
@@ -170,12 +176,3 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
-
-// Text(
-// '1 BTC = ${startingRate} USD',
-// textAlign: TextAlign.center,
-// style: TextStyle(
-// fontSize: 20.0,
-// color: Colors.white,
-// ),
-// ),
